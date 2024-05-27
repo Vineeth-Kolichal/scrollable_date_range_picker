@@ -167,7 +167,7 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
             child: Text(
               DateFormat.yMMM().format(currentMonth),
-              style: widget.currentDayTextStyle ??
+              style: widget.monthHeadingStyle ??
                   const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -176,7 +176,7 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
           ),
           if (!widget.isFixedTopWeekDayHeader) _buildDaysOfWeek(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(vertical: 5),
             child: GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
