@@ -178,6 +178,7 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
             child: GridView.builder(
+              padding: EdgeInsets.zero,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: daysInMonth.length,
@@ -249,30 +250,24 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
         DateTime(
             startingMonth.year + 1, startingMonth.month, startingMonth.day);
     int numOfMonths = calculateMonthsDifference(startingMonth, endDate);
-    return Padding(
-      padding: widget.padding ?? EdgeInsets.zero,
-      child: Container(
-        color: widget.backgroundColor,
-        child: Column(
-          children: [
-            if (widget.isFixedTopWeekDayHeader) _buildDaysOfWeek(),
-            SizedBox(
-              height: widget.height ?? MediaQuery.sizeOf(context).height * 0.8,
-              width: widget.width,
-              child: ListView.builder(
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      _buildDaysGrid(DateTime(
-                          startingMonth.year, startingMonth.month + index, 1)),
-                    ],
-                  );
-                },
-                itemCount: numOfMonths,
-              ),
+    return Container(
+      padding: widget.padding,
+      color: widget.backgroundColor,
+      child: Column(
+        children: [
+          if (widget.isFixedTopWeekDayHeader) _buildDaysOfWeek(),
+          SizedBox(
+            height: widget.height ?? MediaQuery.sizeOf(context).height * 0.8,
+            width: widget.width,
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                return _buildDaysGrid(DateTime(
+                    startingMonth.year, startingMonth.month + index, 1));
+              },
+              itemCount: numOfMonths,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

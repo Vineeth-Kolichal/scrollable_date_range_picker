@@ -1,7 +1,7 @@
 name: scrollable_date_range_picker
-description: "A new Flutter package project."
+description: "Scrollable and easly customizable date range picker for flutter"
 version: 0.0.1
-homepage:
+# homepage:
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
