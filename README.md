@@ -89,7 +89,10 @@ The `ScrollableDateRangePicker` offers several properties for customization:
 
 Screenshots
 -----------
-| ![Screenshot_20240901-221909](https://github.com/user-attachments/assets/56cd82dd-c7c8-4ea8-b118-dd1e627176cc)  | ![Screenshot_20240901-221913](https://github.com/user-attachments/assets/2205d5e4-0d14-4fc7-a39d-9f67c843fa66)  | ![Screenshot_20240901-221928](https://github.com/user-attachments/assets/77a333b2-de3c-4cdc-8321-7ac02084052e)  |
+
+![SS1](https://github.com/user-attachments/assets/a6e6596f-dfa0-479f-994e-a20b61f67237)
+![SS2](https://github.com/user-attachments/assets/c5fa1c35-1f0a-4a0b-9d2d-50bb1d7b16a3)
+![SS3](https://github.com/user-attachments/assets/a05c1bfd-3758-4c6a-b03f-5b9dd09c985a)
 
 
 
