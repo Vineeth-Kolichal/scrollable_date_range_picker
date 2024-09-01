@@ -2,6 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScrollableDateRangePicker extends StatefulWidget {
+  /// A callback function that is triggered when a date range is selected.
+  /// It receives the start date and end date as parameters.
+  /// [onDateRangeSelect]
+  final Function(DateTime? startDate, DateTime? endDate) onDateRangeSelect;
+
+  /// Sets the background color of the widget container.
+  /// [backgroundColor]
+  final Color? backgroundColor;
+
+  /// Specifies the color of the dividers that separate the weeks and months.
+  /// [dividerColor]
+  final Color? dividerColor;
+
+  /// Defines the text style for the weekday headings (Su, Mo, Tu, etc.).
+  /// [weekDayHeadingStyle]
+  final TextStyle? weekDayHeadingStyle;
+
+  /// Sets the text style for the dates displayed in the calendar grid.
+  /// [dateTexStyle]
+  final TextStyle? dateTexStyle;
+
+  /// Specifies the text style for the month headings (e.g., Jan 2024).
+  /// [monthHeadingStyle]
+  final TextStyle? monthHeadingStyle;
+
+  /// Defines the text style for the current day (today's date) in the calendar grid.
+  /// [currentDayTextStyle]
+  final TextStyle? currentDayTextStyle;
+
+  /// Sets the text style for dates that are disabled (i.e., before the [calendarStartDate]
+  /// or after the [calendarEndDate]).
+  /// [disabledDaysTextStyle]
+  final TextStyle? disabledDaysTextStyle;
+
+  /// Provides a decoration (e.g., background color, border) for the current day
+  /// (today's date) in the calendar grid.
+  /// [currentDayDecoration]
+  final BoxDecoration? currentDayDecoration;
+
+  /// Specifies the decoration for the selected start date in the range.
+  /// [startDateDecoration]
+  final BoxDecoration? startDateDecoration;
+
+  /// Defines the decoration for the selected end date in the range.
+  /// [endDateDecoration]
+  final BoxDecoration? endDateDecoration;
+
+  /// Sets the decoration for the dates between the start and end dates (the selected range).
+  /// [rangeDatesDecoration]
+  final BoxDecoration? rangeDatesDecoration;
+
+  /// Sets the height of the scrollable area containing the date range picker.
+  /// [height]
+  final double? height;
+
+  /// Defines the width of the scrollable area containing the date range picker.
+  /// [width]
+  final double? width;
+
+  /// Specifies the padding around the widget container.
+  /// [padding]
+  final EdgeInsetsGeometry? padding;
+
+  /// Defines the earliest date selectable in the calendar. Dates before this
+  /// will be disabled.
+  /// [calendarStartDate]
+  final DateTime? calendarStartDate;
+
+  /// Defines the latest date selectable in the calendar. Dates after this
+  /// will be disabled.
+  /// [calendarEndDate]
+  final DateTime? calendarEndDate;
+
+  /// A boolean that determines whether the weekday header remains fixed at the
+  /// top of the widget. If true, the weekday header will stay at the top, and only the dates will scroll.
+  /// If false, the weekday header will scroll along with the dates.
+  /// [isFixedTopWeekDayHeader]
+  final bool isFixedTopWeekDayHeader;
+
   const ScrollableDateRangePicker({
     super.key,
     required this.onDateRangeSelect,
@@ -23,24 +102,6 @@ class ScrollableDateRangePicker extends StatefulWidget {
     this.isFixedTopWeekDayHeader = true,
     this.disabledDaysTextStyle,
   });
-  final Function(DateTime? startDate, DateTime? endDate) onDateRangeSelect;
-  final Color? backgroundColor;
-  final Color? dividerColor;
-  final TextStyle? weekDayHeadingStyle;
-  final TextStyle? dateTexStyle;
-  final TextStyle? monthHeadingStyle;
-  final TextStyle? currentDayTextStyle;
-  final TextStyle? disabledDaysTextStyle;
-  final BoxDecoration? currentDayDecoration;
-  final BoxDecoration? startDateDecoration;
-  final BoxDecoration? endDateDecoration;
-  final BoxDecoration? rangeDatesDecoration;
-  final double? height;
-  final double? width;
-  final EdgeInsetsGeometry? padding;
-  final DateTime? calendarStartDate;
-  final DateTime? calendarEndDate;
-  final bool isFixedTopWeekDayHeader;
 
   @override
   State<ScrollableDateRangePicker> createState() =>
@@ -203,20 +264,21 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
                         : () {
                             setState(() {
                               if (firstDate != null && lastDate != null) {
-                                firstDate = day;
+                                firstDate = null;
                                 lastDate = null;
-                              } else if (firstDate != null &&
-                                  firstDate!.isBefore(day)) {
+                              }
+                              if (firstDate == null) {
+                                firstDate = day;
+                              } else if (lastDate == null &&
+                                  day.isAfter(firstDate!)) {
                                 lastDate = day;
                                 widget.onDateRangeSelect(firstDate, lastDate);
                               } else {
                                 firstDate = day;
-                                lastDate = null;
                               }
                             });
                           },
                     child: Container(
-                      margin: EdgeInsets.zero,
                       decoration: _getDateDecoration(day),
                       child: Center(
                         child: Text(
@@ -235,36 +297,22 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
     );
   }
 
-  int calculateMonthsDifference(DateTime startDate, DateTime endDate) {
-    int yearDiff = endDate.year - startDate.year;
-    int monthDiff = endDate.month - startDate.month;
-    int toalMonths = yearDiff * 12 + monthDiff;
-    return toalMonths + 1;
-  }
-
   @override
   Widget build(BuildContext context) {
-    DateTime startingMonth =
-        widget.calendarStartDate ?? DateTime(today.year, today.month, 1);
-    DateTime endDate = widget.calendarEndDate ??
-        DateTime(
-            startingMonth.year + 1, startingMonth.month, startingMonth.day);
-    int numOfMonths = calculateMonthsDifference(startingMonth, endDate);
     return Container(
-      padding: widget.padding,
-      color: widget.backgroundColor,
+      padding: widget.padding ?? const EdgeInsets.all(8.0),
+      color: widget.backgroundColor ?? Colors.white,
+      height: widget.height ?? MediaQuery.of(context).size.height * 0.5,
+      width: widget.width ?? MediaQuery.of(context).size.width,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.isFixedTopWeekDayHeader) _buildDaysOfWeek(),
-          SizedBox(
-            height: widget.height ?? MediaQuery.sizeOf(context).height * 0.8,
-            width: widget.width,
+          Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {
-                return _buildDaysGrid(DateTime(
-                    startingMonth.year, startingMonth.month + index, 1));
+                return _buildDaysGrid(DateTime(today.year, today.month - index));
               },
-              itemCount: numOfMonths,
             ),
           ),
         ],

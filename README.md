@@ -1,39 +1,97 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Scrollable Date Range Picker
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter package that provides a customizable scrollable date range picker. This widget allows users to select a range of dates, and it can be easily integrated into any Flutter application.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Scrollable date range picker.
+- Customizable styles for dates, month headings, weekdays, and decorations.
+- Supports disabling dates outside a specific range.
+- Option to fix the weekday header at the top or scroll with the dates.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the following line to your `pubspec.yaml` under dependencies:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  scrollable_date_range_picker: ^0.0.1 
 ```
 
-## Additional information
+Then run `flutter pub get` to install the package.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Usage
+-----
+
+Import the package in your Dart file:
+
+dart
+
+Copy code
+
+`import 'package:scrollable_date_range_picker/scrollable_date_range_picker.dart';`
+
+### Example
+
+Here's a basic example of how to use the `ScrollableDateRangePicker`:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:scrollable_date_range_picker/scrollable_date_range_picker.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return   
+ MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(   
+
+          title: Text('Date Range Picker'),
+        ),
+        body: Center(
+          child: ScrollableDateRangePicker(
+            onDateRangeSelect: (startDate, endDate) => print('Selected range: $startDate - $endDate'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+### Customization
+
+The `ScrollableDateRangePicker` offers several properties for customization:
+
+-   `onDateRangeSelect`: Callback when a date range is selected.
+-   `backgroundColor`: Background color of the picker.
+-   `dividerColor`: Color of the dividers between weeks and months.
+-   `weekDayHeadingStyle`: Style for the weekday headings.
+-   `dateTexStyle`: Style for the dates.
+-   `monthHeadingStyle`: Style for the month headings.
+-   `currentDayTextStyle`: Style for the current day.
+-   `disabledDaysTextStyle`: Style for disabled dates.
+-   `currentDayDecoration`: Decoration for the current day.
+-   `startDateDecoration`: Decoration for the start date.
+-   `endDateDecoration`: Decoration for the end date.
+-   `rangeDatesDecoration`: Decoration for the dates in the selected range.
+-   `height`: Height of the picker.
+-   `width`: Width of the picker.
+-   `padding`: Padding around the picker.
+-   `calendarStartDate`: Earliest selectable date.
+-   `calendarEndDate`: Latest selectable date.
+-   `isFixedTopWeekDayHeader`: Whether to fix the weekday header at the top.
+
+Contributing
+------------
+
+Contributions are welcome! Please submit a pull request or open an issue on GitHub if you have any improvements or suggestions.
+
+License
+-------
+
+This project is licensed under the BSD 3-Clause License- see the LICENSE file for details.
