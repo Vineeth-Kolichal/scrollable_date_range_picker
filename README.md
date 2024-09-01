@@ -86,6 +86,14 @@ The `ScrollableDateRangePicker` offers several properties for customization:
 -   `calendarEndDate`: Latest selectable date.
 -   `isFixedTopWeekDayHeader`: Whether to fix the weekday header at the top.
 
+
+Screenshots
+-----------
+![Screenshot_20240901-221909](https://github.com/user-attachments/assets/56cd82dd-c7c8-4ea8-b118-dd1e627176cc)
+![Screenshot_20240901-221913](https://github.com/user-attachments/assets/2205d5e4-0d14-4fc7-a39d-9f67c843fa66)
+![Screenshot_20240901-221928](https://github.com/user-attachments/assets/77a333b2-de3c-4cdc-8321-7ac02084052e)
+
+
 Contributing
 ------------
 
