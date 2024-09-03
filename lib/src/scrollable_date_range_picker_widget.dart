@@ -82,7 +82,16 @@ class ScrollableDateRangePicker extends StatefulWidget {
   final bool isFixedTopWeekDayHeader;
 
   /// A boolean that determines if the picker goes into the future vs the past
+  /// The default behavior is to pick into the past unless this paremeter
+  /// is true of `calendarStartDate`/`calendarEndDate` specify dates in the future.
+  /// NOTE: You cannot provide this parameter if `calendarStartDate`/`calendarEndDate`
+  /// are provided.
   final bool? pickerGoesIntoFuture;
+
+  /// Display month list with later months occurring BELOW previous months
+  /// in the list. ie.  Order of a standard paper calendar.
+  /// Defaults to true.
+  final bool datesIncreaseScrollingDown;
 
   const ScrollableDateRangePicker({
     super.key,
@@ -105,6 +114,7 @@ class ScrollableDateRangePicker extends StatefulWidget {
     this.isFixedTopWeekDayHeader = true,
     this.disabledDaysTextStyle,
     this.pickerGoesIntoFuture,
+    this.datesIncreaseScrollingDown = true,
   }) : assert( pickerGoesIntoFuture==null || (calendarStartDate==null && calendarEndDate==null) );
 
   @override
@@ -119,15 +129,13 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
   late final bool datesGoIntoPast;
   late final int? knownMonthSpan;
 
-  static int getMonthSizeBetweenDates(DateTime initialDate, DateTime endDate){
+  static int getTotalMonthsIncludingAndBetweenDates(DateTime initialDate, DateTime endDate){
     return (endDate.year-initialDate.year)*12+(endDate.month-initialDate.month)+1;
   }
 
   @override
   void initState() {
     super.initState();
-
-    debugPrint('Entering initState()');
 
     bool intoFuture = false;
     int? computedMonthSpan;
@@ -143,18 +151,14 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
         throw Exception('ScrollableDateRangePicker() does not support displaying months in past and future simultaneously.');
       }
 
-      print("Computing span from ${widget.calendarStartDate} to ${widget.calendarEndDate}");
       intoFuture = widget.calendarEndDate!.isAfter(widget.calendarStartDate!);
       computedMonthSpan =  intoFuture ?
-                          getMonthSizeBetweenDates( widget.calendarStartDate!, widget.calendarEndDate!)
+                          getTotalMonthsIncludingAndBetweenDates( widget.calendarStartDate!, widget.calendarEndDate!)
                           :
-                          getMonthSizeBetweenDates( widget.calendarEndDate!, widget.calendarStartDate!);
-      debugPrint("Month span = $computedMonthSpan");
+                          getTotalMonthsIncludingAndBetweenDates( widget.calendarEndDate!, widget.calendarStartDate!);
     }
     datesGoIntoPast = !intoFuture;
     knownMonthSpan = computedMonthSpan;
-    debugPrint('Leaving initState() datesGoIntoPast=$datesGoIntoPast knownMonthSpan=$knownMonthSpan');
-
   }
 
   List<DateTime?> _generateDaysInMonth(DateTime currentMonth) {
@@ -355,7 +359,7 @@ class _ScrollableDateRangePickerState extends State<ScrollableDateRangePicker> {
           Expanded(
             child: ListView.builder(
               itemCount: knownMonthSpan,
-              reverse: datesGoIntoPast,
+              reverse: widget.datesIncreaseScrollingDown ? datesGoIntoPast : !datesGoIntoPast,
               itemBuilder: (context, index) {
                 return _buildDaysGrid(DateTime(today.year, datesGoIntoPast ? 
                                       (today.month - index) : (today.month + index) ));
