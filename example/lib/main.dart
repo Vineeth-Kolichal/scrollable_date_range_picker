@@ -53,6 +53,30 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const Default(goIntoPastScrollingDown:false),
+                ));
+              },
+              child: const Text("Default Reversed"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const IntoFuture(),
+                ));
+              },
+              child: const Text("Future"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const IntoFutureWithDates(),
+                ));
+              },
+              child: const Text("Future w/Dates"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const Customized(),
                 ));
               },
@@ -65,17 +89,20 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class Default extends StatelessWidget {
-  const Default({super.key});
+
+class IntoFutureWithDates extends StatelessWidget {
+  const IntoFutureWithDates({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final today = DateTime.now();
+    final twoYearsFromNow = today.add(const Duration(days: 365*2));
     return Scaffold(
       appBar: AppBar(
         title: ValueListenableBuilder(
             valueListenable: darkThemeNotifier,
             builder: (context, value, _) {
-              return Text("Default- ${value ? "Dark mode" : "Light mode"}");
+              return Text("Dates- ${value ? "Dark mode" : "Light mode"}");
             }),
         actions: [
           ValueListenableBuilder(
@@ -94,7 +121,91 @@ class Default extends StatelessWidget {
       ),
       body: ScrollableDateRangePicker(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        onDateRangeSelect: (startDate, endDate) {},
+        onDateRangeSelect: (startDate, endDate) {
+          debugPrint('onDateRangeSelect() start: $startDate  end: $endDate');
+        },
+        calendarStartDate: today,
+        calendarEndDate: twoYearsFromNow,
+        isFixedTopWeekDayHeader : false,
+
+      ),
+    );
+  }
+}
+
+class IntoFuture extends StatelessWidget {
+  const IntoFuture({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: ValueListenableBuilder(
+            valueListenable: darkThemeNotifier,
+            builder: (context, value, _) {
+              return Text("Future- ${value ? "Dark mode" : "Light mode"}");
+            }),
+        actions: [
+          ValueListenableBuilder(
+              valueListenable: darkThemeNotifier,
+              builder: (context, value, _) {
+                return IconButton(
+                  onPressed: () {
+                    darkThemeNotifier.value = !darkThemeNotifier.value;
+                  },
+                  icon: Icon(
+                    value ? Icons.dark_mode : Icons.light_mode,
+                  ),
+                );
+              })
+        ],
+      ),
+      body: ScrollableDateRangePicker(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        onDateRangeSelect: (startDate, endDate) {
+          debugPrint('onDateRangeSelect() start: $startDate  end: $endDate');
+        },
+        pickerGoesIntoFuture: true,
+      ),
+    );
+  }
+}
+
+class Default extends StatelessWidget {
+  const Default({super.key, this.goIntoPastScrollingDown=true});
+
+  final bool goIntoPastScrollingDown;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: ValueListenableBuilder(
+            valueListenable: darkThemeNotifier,
+            builder: (context, value, _) {
+              return Text("Default ${goIntoPastScrollingDown?'':'(Past Up)'}- ${value ? "Dark mode" : "Light mode"}");
+            }),
+        actions: [
+          ValueListenableBuilder(
+              valueListenable: darkThemeNotifier,
+              builder: (context, value, _) {
+                return IconButton(
+                  onPressed: () {
+                    darkThemeNotifier.value = !darkThemeNotifier.value;
+                  },
+                  icon: Icon(
+                    value ? Icons.dark_mode : Icons.light_mode,
+                  ),
+                );
+              })
+        ],
+      ),
+      body: ScrollableDateRangePicker(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        onDateRangeSelect: (startDate, endDate) {
+          debugPrint('onDateRangeSelect() start: $startDate  end: $endDate');
+        },
+        datesIncreaseScrollingDown: !goIntoPastScrollingDown,
       ),
     );
   }
