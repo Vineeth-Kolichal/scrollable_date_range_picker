@@ -53,6 +53,14 @@ class HomeScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const Default(goIntoPastScrollingDown:false),
+                ));
+              },
+              child: const Text("Default Reversed"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const IntoFuture(),
                 ));
               },
@@ -94,7 +102,7 @@ class IntoFutureWithDates extends StatelessWidget {
         title: ValueListenableBuilder(
             valueListenable: darkThemeNotifier,
             builder: (context, value, _) {
-              return Text("Future- ${value ? "Dark mode" : "Light mode"}");
+              return Text("Dates- ${value ? "Dark mode" : "Light mode"}");
             }),
         actions: [
           ValueListenableBuilder(
@@ -164,7 +172,9 @@ class IntoFuture extends StatelessWidget {
 }
 
 class Default extends StatelessWidget {
-  const Default({super.key});
+  const Default({super.key, this.goIntoPastScrollingDown=true});
+
+  final bool goIntoPastScrollingDown;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +183,7 @@ class Default extends StatelessWidget {
         title: ValueListenableBuilder(
             valueListenable: darkThemeNotifier,
             builder: (context, value, _) {
-              return Text("Default- ${value ? "Dark mode" : "Light mode"}");
+              return Text("Default ${goIntoPastScrollingDown?'':'(Past Up)'}- ${value ? "Dark mode" : "Light mode"}");
             }),
         actions: [
           ValueListenableBuilder(
@@ -195,6 +205,7 @@ class Default extends StatelessWidget {
         onDateRangeSelect: (startDate, endDate) {
           debugPrint('onDateRangeSelect() start: $startDate  end: $endDate');
         },
+        datesIncreaseScrollingDown: !goIntoPastScrollingDown,
       ),
     );
   }
